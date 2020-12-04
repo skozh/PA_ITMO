@@ -11,7 +11,7 @@ double calcIntegral(long double A, long double B){
     auto t1 = std::chrono::system_clock::now();
     ans = (0.25*(2*((B-A)/(B*A))+sin(2/B)-sin(2/A)));
     auto t2 = std::chrono::system_clock::now();
-    cout<<"Seq result="<<ans<<"\n";
+    cout<<"A = "<<A<<"     \tB = "<<B<<"     \tResult="<<ans<<"\n";
     return std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count();
 }
 
