@@ -8,11 +8,12 @@ using namespace std;
 double calcIntegral(long double A, long double B){
     
     long double ans=0.0;
-    auto t1 = std::chrono::system_clock::now();
+    double t1=0, t2=0;
+    t1 = omp_get_wtime();
     ans = (0.25*(2*((B-A)/(B*A))+sin(2/B)-sin(2/A)));
-    auto t2 = std::chrono::system_clock::now();
+    t2 = omp_get_wtime();
     cout<<"A = "<<A<<"     \tB = "<<B<<"     \tResult="<<ans<<"\n";
-    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count();
+    return (t2-t1);
 }
 
 
@@ -93,6 +94,7 @@ int main(){
     double finalResult[7][20];
     int i;
 
+    cout<<"\nResult:\n";
     for (i=0; i<7; i++){
         finalResult[i][0] = A[i];
         finalResult[i][1] = B[i];
@@ -130,36 +132,43 @@ int main(){
             finalResult[i][14] = calcIntegralParallel_d(A[i], B[i], threads);
         }
     
+    cout<<"\nAtomic:\n";
 
-    cout<<"\nA\tB\tT_S\tT_P_A_3\t\tT_P_A_4\t\tT_P_A_5";
+    cout<<"\nA\tB\tT_S\t\tT_P_A_3\t\t\tT_P_A_4\t\t\tT_P_A_5";
     for (int i=0; i<7; i++){
         cout<<"\n"<<finalResult[i][0]<<"\t"<<finalResult[i][1]<<"\t"
-        <<finalResult[i][2]<<"\t"<<finalResult[i][3]<<"\t"<<finalResult[i][4]
+        <<finalResult[i][2]<<"\t"<<finalResult[i][3]<<"\t\t"<<finalResult[i][4]
         <<"\t\t"<<finalResult[i][5];
     }
-    cout<<"\n";
+    cout<<"\n\n";
 
-    cout<<"\nA\t\tB\t\tT_S\t\tT_P_B_3\t\t\tT_P_B_4\t\t\tT_P_B_5";
+    cout<<"\nCritical:\n";
+
+    cout<<"\nA\tB\tT_S\t\tT_P_B_3\t\t\tT_P_B_4\t\t\tT_P_B_5";
     for (int i=0; i<7; i++){
-        cout<<"\n"<<finalResult[i][0]<<"\t\t"<<finalResult[i][1]<<"\t\t"
-        <<finalResult[i][2]<<"\t\t"<<finalResult[i][6]<<"\t\t"<<finalResult[i][7]
-        <<"\t\t\t"<<finalResult[i][8];
+        cout<<"\n"<<finalResult[i][0]<<"\t"<<finalResult[i][1]<<"\t"
+        <<finalResult[i][2]<<"\t"<<finalResult[i][6]<<"\t\t"<<finalResult[i][7]
+        <<"\t\t"<<finalResult[i][8];
     }
-    cout<<"\n";
+    cout<<"\n\n";
+
+    cout<<"\nLocks:\n";
 
     cout<<"\nA\t\tB\t\tT_S\t\tT_P_C_3\t\t\tT_P_C_4\t\t\tT_P_C_5";
     for (int i=0; i<7; i++){
         cout<<"\n"<<finalResult[i][0]<<"\t\t"<<finalResult[i][1]<<"\t\t"
-        <<finalResult[i][2]<<"\t\t"<<finalResult[i][9]<<"\t\t"<<finalResult[i][10]
-        <<"\t\t\t"<<finalResult[i][11];
+        <<finalResult[i][2]<<"\t"<<finalResult[i][9]<<"\t\t"<<finalResult[i][10]
+        <<"\t\t"<<finalResult[i][11];
     }
-    cout<<"\n";
+    cout<<"\n\n";
+
+    cout<<"\nReduction:\n";
 
     cout<<"\nA\t\tB\t\tT_S\t\tT_P_D_3\t\t\tT_P_D_4\t\t\tT_P_D_5";
     for (int i=0; i<7; i++){
         cout<<"\n"<<finalResult[i][0]<<"\t\t"<<finalResult[i][1]<<"\t\t"
-        <<finalResult[i][2]<<"\t\t"<<finalResult[i][12]<<"\t\t"<<finalResult[i][13]
-        <<"\t\t\t"<<finalResult[i][14];
+        <<finalResult[i][2]<<"\t"<<finalResult[i][12]<<"\t\t"<<finalResult[i][13]
+        <<"\t\t"<<finalResult[i][14];
     }
     cout<<"\n";
 
