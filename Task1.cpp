@@ -18,16 +18,16 @@ double calcIntegral(long double A, long double B){
 
 double calcIntegralParallel_a(long double A, long double B, int threads){
 
-    long double ans, x, y;
+    long double ans=0.0, x=0.0, y=0.0;
     auto t1 = std::chrono::system_clock::now();
-    #pragma omp parallel num_threads(threads) private (x, y)
+    #pragma omp parallel num_threads(threads)
         x = 2*((B-A)/(B*A));
         y = sin(2/B)-sin(2/A);
         #pragma omp atomic                  //atomic
-            ans=0.25*(x+y);
+            ans+=0.25*(x+y);
     auto t2 = std::chrono::system_clock::now();
     //cout<<"Parallel result="<<ans<<"\n";
-    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count();
+    return std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
 
 }
 
@@ -35,14 +35,14 @@ double calcIntegralParallel_b(long double A, long double B, int threads){
 
     long double ans, x, y;
     auto t1 = std::chrono::system_clock::now();
-    #pragma omp parallel num_threads(threads) private (x, y)
-        x = 2*((B-A)/(B*A));
-        y = sin(2/B)-sin(2/A);
+    #pragma omp parallel num_threads(threads)
+        x = (0.25*(2*((B-A)/(B*A))));
+        y = (0.25*(sin(2/B)-sin(2/A)));
         #pragma omp critical                //critical
-            ans=0.25*(x+y);
+            ans=(x+y);
     auto t2 = std::chrono::system_clock::now();
     //cout<<"Parallel result="<<ans<<"\n";
-    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count();
+    return std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
 
 }
 
@@ -52,7 +52,7 @@ double calcIntegralParallel_c(long double A, long double B, int threads){
     auto t1 = std::chrono::system_clock::now();
     omp_lock_t lock1;
     omp_init_lock(&lock1);
-    #pragma omp parallel num_threads(threads) private (x, y)
+    #pragma omp parallel num_threads(threads)
         x = 2*((B-A)/(B*A));
         y = sin(2/B)-sin(2/A);
         omp_set_lock(&lock1);               
@@ -61,7 +61,7 @@ double calcIntegralParallel_c(long double A, long double B, int threads){
     omp_destroy_lock(&lock1);
     auto t2 = std::chrono::system_clock::now();
     //cout<<"Parallel result="<<ans<<"\n";
-    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count();
+    return std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
 
 }
 
@@ -70,14 +70,14 @@ double calcIntegralParallel_d(long double A, long double B, int threads){
 
     long double ans, x, y;
     auto t1 = std::chrono::system_clock::now();
-    #pragma omp parallel num_threads(threads) private (x, y)
+    #pragma omp parallel num_threads(threads)
         x = 2*((B-A)/(B*A));
         y = sin(2/B)-sin(2/A);
         #pragma omp reduction(+:ans)        //reduction
             ans=0.25*(x+y);
     auto t2 = std::chrono::system_clock::now();
     //cout<<"Parallel result="<<ans<<"\n";
-    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count();
+    return std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
 
 }
 

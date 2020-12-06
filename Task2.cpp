@@ -26,9 +26,8 @@ double multiplyMatricesParallel_1(int A[][100], int B[][100], int D[][100], int 
     int i, j, k;
     omp_set_dynamic(0);
     omp_set_num_threads(size);
+    auto t1 = std::chrono::system_clock::now();
     #pragma omp parallel for private(i)
-    {
-        auto t1 = std::chrono::system_clock::now();
         for (i=0; i<size; i++){
             for (j=0; j<size; j++){
                 D[i][j]=0;
@@ -37,10 +36,8 @@ double multiplyMatricesParallel_1(int A[][100], int B[][100], int D[][100], int 
                 }
             }
         }
-        auto t2 = std::chrono::system_clock::now();
-        return std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count(); 
-    }
-
+    auto t2 = std::chrono::system_clock::now();
+    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count();
 }
 
 
@@ -49,9 +46,8 @@ double multiplyMatricesParallel_2(int A[][100], int B[][100], int D[][100], int 
     int i, j, k;
     omp_set_dynamic(0);
     omp_set_num_threads(size);
+    auto t1 = std::chrono::system_clock::now();
     #pragma omp parallel for private(j)
-    {
-        auto t1 = std::chrono::system_clock::now();
         for (i=0; i<size; i++){
             for (j=0; j<size; j++){
                 D[i][j]=0;
@@ -60,10 +56,8 @@ double multiplyMatricesParallel_2(int A[][100], int B[][100], int D[][100], int 
                 }
             }
         }
-        auto t2 = std::chrono::system_clock::now();
-        return std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count(); 
-    }
-
+    auto t2 = std::chrono::system_clock::now();
+    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count(); 
 }
 
 
