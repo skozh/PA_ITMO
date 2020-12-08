@@ -12,16 +12,16 @@
 
 //OpenCL kernel which is run for every work item created.
 const char *saxpy_kernel =
-"__kernel                                   \n"
-"void saxpy_kernel(                         \n"
-"                  __global float *A,       \n"
-"                  __global float *B,       \n"
-"                  __global float *C)       \n"
-"{                                          \n"
-"    //Get the index of the work-item       \n"
-"    int index = get_global_id(0);          \n"
-"    C[index] = A[index] * B[index]; \n"
-"}                                          \n";
+"__kernel                                                       \n"
+"void saxpy_kernel(                                             \n"
+"                  __global float *A,                           \n"
+"                  __global float *B,                           \n"
+"                  __global float *C)                           \n"
+"{                                                              \n"
+"    //Get the index of the work-item                           \n"
+"    int index = get_global_id(0);                              \n"
+"    C[index] = (A[index] - B[index]) * (A[index] - B[index]);  \n"
+"}                                                              \n";
 
 
 void displayMatrix(int Mat[100][100], int rows, int cols){
@@ -109,8 +109,8 @@ int main(void) {
   for (int i=0; i<rows; i++){
     for (int j=0; j<rows; j++){
       for (int k=0; k<cols; k++){
-        A[m] = abs(Mat[i][k] - Mat[j][k]);
-        B[m] = abs(Mat[j][k] - Mat[i][k]);
+        A[m] = Mat[i][k];
+        B[m] = Mat[j][k];
         m++; 
       }
     }
