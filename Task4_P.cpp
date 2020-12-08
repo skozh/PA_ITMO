@@ -189,7 +189,7 @@ public:
 
             omp_set_dynamic(0);
             omp_set_num_threads(2);
-            #pragma omp parallel private(i) shared(total_points)
+            #pragma omp parallel private(i)
                 #pragma omp for
                 // Add all points to their nearest cluster
                 for(i = 0; i < total_points; i++)
