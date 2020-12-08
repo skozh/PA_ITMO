@@ -151,7 +151,7 @@ int main(void) {
   // Execute the OpenCL kernel on the list
   size_t global_size = VECTOR_SIZE;           // Process the entire lists
   size_t local_size = VECTOR_SIZE;            // Process one item at a time
-  clStatus = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global_size, &local_size, 0, NULL, NULL);
+  clStatus = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global_size, NULL, 0, NULL, NULL);
 
   // Read the cl memory C_clmem on device to the host variable C
   clStatus = clEnqueueReadBuffer(command_queue, C_clmem, CL_TRUE, 0, VECTOR_SIZE * sizeof(float), C, 0, NULL, NULL);
